@@ -1,0 +1,1086 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Insumos API",
+    "version": "1.0.0",
+    "description": "Documentación Insumos API"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor de Desarrollo"
+    }
+  ],
+  "paths": {
+    "/fabricantes/crearFabricante": {
+      "post": {
+        "summary": "Crea un nuevo fabricante",
+        "description": "Registra un nuevo fabricante en el sistema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Fabricante",
+                "type": "object",
+                "required": [
+                  "nombre",
+                  "cuit",
+                  "empresa"
+                ],
+                "properties": {
+                  "nombre": {
+                    "type": "string",
+                    "description": "Nombre del fabricante, alfanumérico y con al menos 3 caracteres"
+                  },
+                  "cuit": {
+                    "type": "string",
+                    "description": "CUIT del fabricante, alfanumérico"
+                  },
+                  "empresa": {
+                    "type": "string",
+                    "description": "Nombre de la empresa del fabricante, alfanumérico"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Fabricante creado exitosamente"
+          },
+          "400": {
+            "description": "Datos de entrada inválidos"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/fabricantes/obtenerTodosLosFabricantes": {
+      "get": {
+        "summary": "Obtiene todos los fabricantes",
+        "description": "Devuelve una lista de todos los fabricantes registrados.",
+        "responses": {
+          "200": {
+            "description": "Lista de fabricantes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Fabricante"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/fabricantes/actualizarFabricante/{id}": {
+      "put": {
+        "summary": "Actualiza un fabricante",
+        "description": "Actualiza los detalles de un fabricante existente en el sistema.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del fabricante a actualizar"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Fabricante"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fabricante actualizado exitosamente"
+          },
+          "404": {
+            "description": "Fabricante no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/fabricantes/eliminarFabricante/{id}": {
+      "delete": {
+        "summary": "Elimina un fabricante",
+        "description": "Elimina un fabricante del sistema basado en su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del fabricante a eliminar"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Fabricante eliminado correctamente"
+          },
+          "404": {
+            "description": "Fabricante no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/insumos/obtenerTodosLosInsumos": {
+      "get": {
+        "summary": "Obtiene todos los insumos",
+        "description": "Devuelve un listado de todos los insumos registrados.",
+        "responses": {
+          "200": {
+            "description": "Lista de insumos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Insumo"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/insumos/crearInsumo": {
+      "post": {
+        "summary": "Crea un nuevo insumo",
+        "description": "Registra un nuevo insumo en el sistema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Insumo",
+                "type": "object",
+                "required": [
+                  "insumo_name",
+                  "price",
+                  "is_stock",
+                  "cantidad",
+                  "tipo"
+                ],
+                "properties": {
+                  "insumo_name": {
+                    "type": "string",
+                    "description": "Nombre del insumo, debe ser alfanumérico y tener al menos 3 caracteres"
+                  },
+                  "price": {
+                    "type": "number",
+                    "description": "Precio del insumo, debe ser numérico"
+                  },
+                  "is_stock": {
+                    "type": "boolean",
+                    "description": "Indica si el insumo está en stock, debe ser numérico"
+                  },
+                  "cantidad": {
+                    "type": "number",
+                    "description": "Cantidad disponible del insumo, debe ser numérico"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "description": "Tipo de insumo, debe ser alfanumérico"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Insumo creado exitosamente"
+          },
+          "400": {
+            "description": "Datos de entrada inválidos"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/insumos/obtenerInsumoPorID/{insumo_id}": {
+      "get": {
+        "summary": "Obtiene un insumo por su ID",
+        "description": "Devuelve los detalles de un insumo específico basado en su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "insumo_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID único del insumo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalles del insumo"
+          },
+          "404": {
+            "description": "Insumo no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/insumos/actualizarInsumo": {
+      "put": {
+        "summary": "Actualiza un insumo",
+        "description": "Actualiza los detalles de un insumo existente.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Insumo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Insumo actualizado exitosamente"
+          },
+          "400": {
+            "description": "Datos de entrada inválidos"
+          },
+          "404": {
+            "description": "Insumo no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/insumos/eliminarInsumo/{insumo_id}": {
+      "delete": {
+        "summary": "Elimina un insumo",
+        "description": "Elimina un insumo del sistema basado en su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "insumo_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del insumo a eliminar"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Insumo eliminado exitosamente"
+          },
+          "404": {
+            "description": "Insumo no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/usuarios/login": {
+      "post": {
+        "summary": "Iniciar sesión",
+        "description": "Permite a un usuario iniciar sesión en el sistema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "usuario o email",
+                  "password"
+                ],
+                "properties": {
+                  "usuario": {
+                    "type": "string",
+                    "description": "El nombre de usuario para iniciar sesión"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "El email del usuario para iniciar sesión"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "La contraseña del usuario"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Inicio de sesión exitoso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "description": "Token de acceso generado para el usuario"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "401": {
+            "description": "Autenticación fallida"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/usuarios/crearUsuario": {
+      "post": {
+        "summary": "Crea un nuevo usuario",
+        "description": "Añade un nuevo usuario al sistema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "usuario",
+                  "password",
+                  "email",
+                  "rol"
+                ],
+                "properties": {
+                  "usuario": {
+                    "type": "string",
+                    "description": "Nombre de usuario para el nuevo usuario"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Contraseña para el nuevo usuario"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Dirección de correo electrónico del usuario"
+                  },
+                  "rol": {
+                    "type": "string",
+                    "description": "Rol del usuario en el sistema"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario creado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/usuarios/obtenerUsuarioPorID/{usuario_id}": {
+      "get": {
+        "summary": "Obtiene un usuario por su ID",
+        "description": "Devuelve los detalles de un usuario específico basado en su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usuario_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID único del usuario"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalles del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/usuarios/obtenerTodosLosUsuarios": {
+      "get": {
+        "summary": "Obtiene todos los usuarios",
+        "description": "Devuelve un listado de todos los usuarios registrados.",
+        "responses": {
+          "200": {
+            "description": "Lista de usuarios",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usuario"
+                  },
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/usuarios/actualizarUsuario": {
+      "put": {
+        "summary": "Actualiza un usuario",
+        "description": "Actualiza los datos de un usuario existente.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "usuario_id"
+                ],
+                "properties": {
+                  "usuario_id": {
+                    "type": "integer",
+                    "description": "ID del usuario a actualizar"
+                  },
+                  "usuario": {
+                    "type": "string",
+                    "description": "Nombre de usuario actualizado"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Contraseña actualizada"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Email actualizado"
+                  },
+                  "rol": {
+                    "type": "string",
+                    "description": "Rol actualizado"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario actualizado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/usuarios/actualizarUsuarioPorID/{usuario_id}": {
+      "put": {
+        "summary": "Actualiza un usuario por su ID",
+        "description": "Actualiza los detalles de un usuario específico basado en su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usuario_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID único del usuario a actualizar"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "usuario": {
+                    "type": "string",
+                    "description": "Nombre de usuario actualizado"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Contraseña actualizada"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Email actualizado"
+                  },
+                  "rol": {
+                    "type": "string",
+                    "description": "Rol actualizado"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario actualizado exitosamente"
+          },
+          "400": {
+            "description": "Datos de entrada inválidos"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/usuarios/eliminarUsuario": {
+      "delete": {
+        "summary": "Elimina un usuario",
+        "description": "Elimina un usuario de la base de datos.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usuario_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del usuario a eliminar"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario eliminado correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Usuario eliminado correctamente"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/usuarios/actualizarPass": {
+      "put": {
+        "summary": "Actualiza la contraseña de un usuario",
+        "description": "Permite a un usuario actualizar su contraseña.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "usuario_id",
+                  "passwordActual",
+                  "passwordNuevo"
+                ],
+                "properties": {
+                  "usuario_id": {
+                    "type": "integer",
+                    "description": "ID del usuario que actualiza su contraseña"
+                  },
+                  "passwordActual": {
+                    "type": "string",
+                    "description": "Contraseña actual del usuario"
+                  },
+                  "passwordNuevo": {
+                    "type": "string",
+                    "description": "Nueva contraseña del usuario"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contraseña actualizada exitosamente"
+          },
+          "400": {
+            "description": "Datos de entrada inválidos"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/fabricantes/actualizarFabricante": {
+      "put": {
+        "summary": "Actualiza un fabricante",
+        "description": "Actualiza los detalles de un fabricante existente.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Fabricante"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fabricante actualizado exitosamente"
+          },
+          "400": {
+            "description": "Datos de entrada inválidos"
+          },
+          "404": {
+            "description": "Fabricante no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/fabricantes/eliminarFabricante": {
+      "delete": {
+        "summary": "Elimina un fabricante",
+        "description": "Elimina un fabricante del sistema.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "fabricante_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del fabricante a eliminar"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fabricante eliminado exitosamente"
+          },
+          "400": {
+            "description": "Datos de entrada inválidos"
+          },
+          "404": {
+            "description": "Fabricante no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/insumos/obtenerInsumoPorID": {
+      "get": {
+        "summary": "Obtiene un insumo por ID",
+        "description": "Devuelve los detalles de un insumo específico.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalles del insumo"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "404": {
+            "description": "Insumo no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/insumos/eliminarInsumo": {
+      "delete": {
+        "summary": "Elimina un insumo",
+        "description": "Elimina un insumo del sistema.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "insumo_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del insumo a eliminar"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Insumo eliminado exitosamente"
+          },
+          "400": {
+            "description": "Datos de entrada inválidos"
+          },
+          "404": {
+            "description": "Insumo no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/usuarios/obtenerUsuarioPorID": {
+      "get": {
+        "summary": "Obtiene un usuario por ID",
+        "description": "Devuelve los detalles de un usuario específico.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalles del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    },
+    "/usuarios/actualizarUsuarioPorID": {
+      "put": {
+        "summary": "Actualiza un usuario específico por ID",
+        "description": "Actualiza los datos de un usuario basado en su ID.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario actualizado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "500": {
+            "description": "Error en el servidor"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Fabricante": {
+        "type": "object",
+        "required": [
+          "nombre",
+          "cuit",
+          "empresa"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID autogenerado para el fabricante"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Nombre del fabricante"
+          },
+          "cuit": {
+            "type": "string",
+            "description": "CUIT del fabricante"
+          },
+          "empresa": {
+            "type": "string",
+            "description": "Nombre de la empresa del fabricante"
+          }
+        },
+        "example": {
+          "id": 1,
+          "nombre": "Fabricante Ejemplo",
+          "cuit": "30-12345678-9",
+          "empresa": "Empresa Ejemplo"
+        }
+      },
+      "Insumo": {
+        "type": "object",
+        "required": [
+          "insumo_name",
+          "price",
+          "is_stock",
+          "cantidad",
+          "tipo"
+        ],
+        "properties": {
+          "insumo_id": {
+            "type": "integer",
+            "description": "ID autogenerado para el insumo"
+          },
+          "insumo_name": {
+            "type": "string",
+            "description": "Nombre del insumo"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "description": "Precio del insumo"
+          },
+          "is_stock": {
+            "type": "boolean",
+            "description": "Indica si el insumo está en stock"
+          },
+          "cantidad": {
+            "type": "integer",
+            "description": "Cantidad disponible del insumo"
+          },
+          "tipo": {
+            "type": "integer",
+            "description": "Tipo de insumo"
+          }
+        },
+        "example": {
+          "insumo_id": 1,
+          "insumo_name": "Insumo Ejemplo",
+          "price": 100.5,
+          "is_stock": true,
+          "cantidad": 50,
+          "tipo": 2
+        }
+      },
+      "Usuario": {
+        "type": "object",
+        "required": [
+          "usuario",
+          "password",
+          "email",
+          "rol"
+        ],
+        "properties": {
+          "usuario_id": {
+            "type": "integer",
+            "description": "ID autogenerado para el usuario"
+          },
+          "usuario": {
+            "type": "string",
+            "description": "Nombre de usuario"
+          },
+          "password": {
+            "type": "string",
+            "description": "Contraseña del usuario"
+          },
+          "email": {
+            "type": "string",
+            "description": "Dirección de correo electrónico del usuario"
+          },
+          "rol": {
+            "type": "integer",
+            "description": "Rol del usuario en el sistema"
+          }
+        },
+        "example": {
+          "usuario_id": 1,
+          "usuario": "usuarioejemplo",
+          "password": "contraseña123",
+          "email": "usuario@ejemplo.com",
+          "rol": 2
+        }
+      }
+    }
+  },
+  "tags": []
+}

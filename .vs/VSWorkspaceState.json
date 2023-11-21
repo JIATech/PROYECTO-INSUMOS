@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\back",
+    "\\back\\src",
+    "\\back\\src\\config",
+    "\\back\\src\\controladores",
+    "\\back\\src\\middleware",
+    "\\back\\src\\modelos",
+    "\\back\\src\\rutas"
+  ],
+  "SelectedNode": "\\back\\src\\modelos\\fabricantes.js",
+  "PreviewInSolutionExplorer": false
+}
