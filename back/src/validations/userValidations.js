@@ -34,6 +34,20 @@ const validacionesInputs = [
     .not()
     .isEmpty()
     .isAlphanumeric(),
+    // Si el rol es cliente o fabricante verifica que el nombre de la empresa exista, no esté vacío y sea alfanumérico.
+    check('nombreEmpresa')
+    .if(check('rolNombre').equals('cliente') || check('rolNombre').equals('fabricante'))
+    .exists()
+    .not()
+    .isEmpty()
+    .isAlphanumeric(),
+    // Si el rol es cliente o fabricante verifica que el CUIT exista, no esté vacío y sea alfanumérico.
+    check('cuit')
+    .if(check('rolNombre').equals('cliente') || check('rolNombre').equals('fabricante'))
+    .exists()
+    .not()
+    .isEmpty()
+    .isAlphanumeric(),
  
     // Middleware para procesar y devolver los resultados de las validaciones.
     (req, res, next) => {

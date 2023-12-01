@@ -1,540 +1,24 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Insumos API",
-    "version": "1.0.0",
-    "description": "Documentación Insumos API"
+    "description": "Documentación Insumos API",
+    "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "http://localhost:3000",
-      "description": "Servidor de Desarrollo"
+      "url": "http://localhost:3000"
     }
   ],
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "schemas": {
-      "Fabricante": {
-        "type": "object",
-        "required": [
-          "nombre",
-          "cuit",
-          "empresa"
-        ],
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "ID autogenerado para el fabricante"
-          },
-          "nombre": {
-            "type": "string",
-            "description": "Nombre del fabricante"
-          },
-          "cuit": {
-            "type": "string",
-            "description": "CUIT del fabricante"
-          },
-          "empresa": {
-            "type": "string",
-            "description": "Nombre de la empresa del fabricante"
-          }
-        },
-        "example": {
-          "id": 1,
-          "nombre": "Fabricante Ejemplo",
-          "cuit": "30-12345678-9",
-          "empresa": "Empresa Ejemplo"
-        }
-      },
-      "Insumo": {
-        "type": "object",
-        "required": [
-          "insumo_name",
-          "price",
-          "is_stock",
-          "cantidad",
-          "tipo"
-        ],
-        "properties": {
-          "insumo_id": {
-            "type": "integer",
-            "description": "ID autogenerado para el insumo"
-          },
-          "insumo_name": {
-            "type": "string",
-            "description": "Nombre del insumo"
-          },
-          "price": {
-            "type": "number",
-            "format": "float",
-            "description": "Precio del insumo"
-          },
-          "is_stock": {
-            "type": "boolean",
-            "description": "Indica si el insumo está en stock"
-          },
-          "cantidad": {
-            "type": "integer",
-            "description": "Cantidad disponible del insumo"
-          },
-          "tipo": {
-            "type": "integer",
-            "description": "Tipo de insumo"
-          }
-        },
-        "example": {
-          "insumo_id": 1,
-          "insumo_name": "Insumo Ejemplo",
-          "price": 100.5,
-          "is_stock": true,
-          "cantidad": 50,
-          "tipo": 2
-        }
-      },
-      "Usuario": {
-        "type": "object",
-        "required": [
-          "usuario",
-          "password",
-          "email",
-          "rol"
-        ],
-        "properties": {
-          "usuario_id": {
-            "type": "integer",
-            "description": "ID autogenerado para el usuario"
-          },
-          "usuario": {
-            "type": "string",
-            "description": "Nombre de usuario"
-          },
-          "password": {
-            "type": "string",
-            "description": "Contraseña del usuario"
-          },
-          "email": {
-            "type": "string",
-            "description": "Dirección de correo electrónico del usuario"
-          },
-          "rol": {
-            "type": "integer",
-            "description": "Rol del usuario en el sistema"
-          }
-        },
-        "example": {
-          "usuario_id": 1,
-          "usuario": "usuarioejemplo",
-          "password": "contraseña123",
-          "email": "usuario@ejemplo.com",
-          "rol": 2
-        }
-      }
-    }
-  },
   "paths": {
-    "/fabricantes/crearFabricante": {
+    "/crearUsuario": {
       "post": {
-        "summary": "Crea un nuevo fabricante",
-        "description": "Registra un nuevo fabricante en el sistema.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Fabricante",
-                "type": "object",
-                "required": [
-                  "nombre",
-                  "cuit",
-                  "empresa"
-                ],
-                "properties": {
-                  "nombre": {
-                    "type": "string",
-                    "description": "Nombre del fabricante, alfanumérico y con al menos 3 caracteres"
-                  },
-                  "cuit": {
-                    "type": "string",
-                    "description": "CUIT del fabricante, alfanumérico"
-                  },
-                  "empresa": {
-                    "type": "string",
-                    "description": "Nombre de la empresa del fabricante, alfanumérico"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Fabricante creado exitosamente"
-          },
-          "400": {
-            "description": "Datos de entrada inválidos"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/fabricantes/obtenerTodosLosFabricantes": {
-      "get": {
-        "summary": "Obtiene todos los fabricantes",
-        "description": "Devuelve una lista de todos los fabricantes registrados.",
-        "responses": {
-          "200": {
-            "description": "Lista de fabricantes",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Fabricante"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/fabricantes/actualizarFabricante/{id}": {
-      "put": {
-        "summary": "Actualiza un fabricante",
-        "description": "Actualiza los detalles de un fabricante existente en el sistema.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "ID del fabricante a actualizar"
-          }
+        "tags": [
+          "Usuarios"
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Fabricante"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Fabricante actualizado exitosamente"
-          },
-          "404": {
-            "description": "Fabricante no encontrado"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        }
-      }
-    },
-    "/fabricantes/eliminarFabricante/{id}": {
-      "delete": {
-        "summary": "Elimina un fabricante",
-        "description": "Elimina un fabricante del sistema basado en su ID.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "ID del fabricante a eliminar"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Fabricante eliminado correctamente"
-          },
-          "404": {
-            "description": "Fabricante no encontrado"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        }
-      }
-    },
-    "/insumos/obtenerTodosLosInsumos": {
-      "get": {
-        "summary": "Obtiene todos los insumos",
-        "description": "Devuelve un listado de todos los insumos registrados.",
-        "responses": {
-          "200": {
-            "description": "Lista de insumos",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Insumo"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No autorizado"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/insumos/crearInsumo": {
-      "post": {
-        "summary": "Crea un nuevo insumo",
-        "description": "Registra un nuevo insumo en el sistema.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Insumo",
-                "type": "object",
-                "required": [
-                  "insumo_name",
-                  "price",
-                  "is_stock",
-                  "cantidad",
-                  "tipo"
-                ],
-                "properties": {
-                  "insumo_name": {
-                    "type": "string",
-                    "description": "Nombre del insumo, debe ser alfanumérico y tener al menos 3 caracteres"
-                  },
-                  "price": {
-                    "type": "number",
-                    "description": "Precio del insumo, debe ser numérico"
-                  },
-                  "is_stock": {
-                    "type": "boolean",
-                    "description": "Indica si el insumo está en stock, debe ser numérico"
-                  },
-                  "cantidad": {
-                    "type": "number",
-                    "description": "Cantidad disponible del insumo, debe ser numérico"
-                  },
-                  "tipo": {
-                    "type": "string",
-                    "description": "Tipo de insumo, debe ser alfanumérico"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Insumo creado exitosamente"
-          },
-          "400": {
-            "description": "Datos de entrada inválidos"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/insumos/obtenerInsumoPorID/{insumo_id}": {
-      "get": {
-        "summary": "Obtiene un insumo por su ID",
-        "description": "Devuelve los detalles de un insumo específico basado en su ID.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "insumo_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "ID único del insumo"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Detalles del insumo"
-          },
-          "404": {
-            "description": "Insumo no encontrado"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        }
-      }
-    },
-    "/insumos/actualizarInsumo": {
-      "put": {
-        "summary": "Actualiza un insumo",
-        "description": "Actualiza los detalles de un insumo existente.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Insumo"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Insumo actualizado exitosamente"
-          },
-          "400": {
-            "description": "Datos de entrada inválidos"
-          },
-          "404": {
-            "description": "Insumo no encontrado"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/insumos/eliminarInsumo/{insumo_id}": {
-      "delete": {
-        "summary": "Elimina un insumo",
-        "description": "Elimina un insumo del sistema basado en su ID.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "insumo_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "ID del insumo a eliminar"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Insumo eliminado exitosamente"
-          },
-          "404": {
-            "description": "Insumo no encontrado"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        }
-      }
-    },
-    "/usuarios/login": {
-      "post": {
-        "summary": "Iniciar sesión",
-        "description": "Permite a un usuario iniciar sesión en el sistema.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "usuario o email",
-                  "password"
-                ],
-                "properties": {
-                  "usuario": {
-                    "type": "string",
-                    "description": "El nombre de usuario para iniciar sesión"
-                  },
-                  "email": {
-                    "type": "string",
-                    "description": "El email del usuario para iniciar sesión"
-                  },
-                  "password": {
-                    "type": "string",
-                    "description": "La contraseña del usuario"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Inicio de sesión exitoso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string",
-                      "description": "Token de acceso generado para el usuario"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Datos inválidos"
-          },
-          "401": {
-            "description": "Autenticación fallida"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        }
-      }
-    },
-    "/usuarios/crearUsuario": {
-      "post": {
         "summary": "Crea un nuevo usuario",
-        "description": "Añade un nuevo usuario al sistema.",
+        "description": "Registra un nuevo usuario en el sistema con rol 'cliente' o 'administrador'.",
+        "operationId": "crearUsuario",
         "requestBody": {
           "required": true,
           "content": {
@@ -545,24 +29,26 @@
                   "usuario",
                   "password",
                   "email",
-                  "rol"
+                  "rolNombre"
                 ],
                 "properties": {
                   "usuario": {
                     "type": "string",
-                    "description": "Nombre de usuario para el nuevo usuario"
+                    "description": "Nombre de usuario único para el nuevo usuario."
                   },
                   "password": {
                     "type": "string",
-                    "description": "Contraseña para el nuevo usuario"
+                    "format": "password",
+                    "description": "Contraseña para el nuevo usuario."
                   },
                   "email": {
                     "type": "string",
-                    "description": "Dirección de correo electrónico del usuario"
+                    "format": "email",
+                    "description": "Dirección de correo electrónico del nuevo usuario."
                   },
-                  "rol": {
+                  "rolNombre": {
                     "type": "string",
-                    "description": "Rol del usuario en el sistema"
+                    "description": "Rol asignado al nuevo usuario, puede ser 'cliente' o 'administrador'."
                   }
                 }
               }
@@ -571,183 +57,101 @@
         },
         "responses": {
           "201": {
-            "description": "Usuario creado con éxito",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Usuario"
-                }
-              }
-            }
+            "description": "Usuario creado exitosamente."
           },
           "400": {
-            "description": "Datos inválidos"
+            "description": "Datos de entrada inválidos o usuario ya existe."
           },
           "401": {
-            "description": "No autorizado"
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
+          },
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para crear usuarios."
           },
           "500": {
-            "description": "Error en el servidor"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/usuarios/obtenerUsuarioPorID/{usuario_id}": {
-      "get": {
-        "summary": "Obtiene un usuario por su ID",
-        "description": "Devuelve los detalles de un usuario específico basado en su ID.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "usuario_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "ID único del usuario"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Detalles del usuario",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Usuario"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Usuario no encontrado"
-          },
-          "500": {
-            "description": "Error en el servidor"
+            "description": "Error interno del servidor."
           }
         }
       }
     },
-    "/usuarios/obtenerTodosLosUsuarios": {
+    "/obtenerTodosLosUsuarios": {
       "get": {
-        "summary": "Obtiene todos los usuarios",
-        "description": "Devuelve un listado de todos los usuarios registrados.",
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Obtiene una lista de todos los usuarios",
+        "description": "Devuelve un array de todos los usuarios registrados en el sistema.",
+        "operationId": "obtenerTodosLosUsuarios",
         "responses": {
           "200": {
-            "description": "Lista de usuarios",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Usuario"
-                  },
-                  "$ref": "#/components/schemas/Usuario"
-                }
-              }
-            }
+            "description": "Lista de usuarios obtenida con éxito."
           },
           "401": {
-            "description": "No autorizado"
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
+          },
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para acceder a la información."
           },
           "500": {
-            "description": "Error en el servidor"
+            "description": "Error interno del servidor."
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
-    "/usuarios/actualizarUsuario": {
-      "put": {
-        "summary": "Actualiza un usuario",
-        "description": "Actualiza los datos de un usuario existente.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "usuario_id"
-                ],
-                "properties": {
-                  "usuario_id": {
-                    "type": "integer",
-                    "description": "ID del usuario a actualizar"
-                  },
-                  "usuario": {
-                    "type": "string",
-                    "description": "Nombre de usuario actualizado"
-                  },
-                  "password": {
-                    "type": "string",
-                    "description": "Contraseña actualizada"
-                  },
-                  "email": {
-                    "type": "string",
-                    "description": "Email actualizado"
-                  },
-                  "rol": {
-                    "type": "string",
-                    "description": "Rol actualizado"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Usuario actualizado con éxito",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Usuario"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Datos inválidos"
-          },
-          "401": {
-            "description": "No autorizado"
-          },
-          "404": {
-            "description": "Usuario no encontrado"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/usuarios/actualizarUsuarioPorID/{usuario_id}": {
-      "put": {
-        "summary": "Actualiza un usuario por su ID",
-        "description": "Actualiza los detalles de un usuario específico basado en su ID.",
+    "/obtenerUsuarioPorID/{id}": {
+      "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Obtiene un usuario específico por su ID",
+        "description": "Devuelve los detalles de un usuario específico basado en su ID único.",
+        "operationId": "obtenerUsuarioPorID",
         "parameters": [
           {
+            "name": "id",
             "in": "path",
-            "name": "usuario_id",
             "required": true,
+            "description": "ID único del usuario a obtener.",
             "schema": {
-              "type": "integer"
-            },
-            "description": "ID único del usuario a actualizar"
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalles del usuario obtenidos con éxito."
+          },
+          "400": {
+            "description": "ID de usuario inválido o no proporcionado."
+          },
+          "404": {
+            "description": "Usuario no encontrado con el ID proporcionado."
+          },
+          "500": {
+            "description": "Error interno del servidor."
+          }
+        }
+      }
+    },
+    "/actualizarUsuarioPorID/{id}": {
+      "put": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Actualiza un usuario específico por su ID",
+        "description": "Permite actualizar los detalles de un usuario específico basado en su ID único. Requiere autenticación y permisos adecuados.",
+        "operationId": "actualizarUsuarioPorID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID único del usuario a actualizar.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         ],
         "requestBody": {
@@ -759,20 +163,17 @@
                 "properties": {
                   "usuario": {
                     "type": "string",
-                    "description": "Nombre de usuario actualizado"
-                  },
-                  "password": {
-                    "type": "string",
-                    "description": "Contraseña actualizada"
+                    "description": "Nombre de usuario actualizado (opcional)."
                   },
                   "email": {
                     "type": "string",
-                    "description": "Email actualizado"
-                  },
-                  "rol": {
-                    "type": "string",
-                    "description": "Rol actualizado"
+                    "format": "email",
+                    "description": "Dirección de correo electrónico actualizada (opcional)."
                   }
+                },
+                "example": {
+                  "usuario": "nuevoNombreDeUsuario",
+                  "email": null
                 }
               }
             }
@@ -780,70 +181,76 @@
         },
         "responses": {
           "200": {
-            "description": "Usuario actualizado exitosamente"
+            "description": "Usuario actualizado con éxito."
           },
           "400": {
-            "description": "Datos de entrada inválidos"
+            "description": "Datos de entrada inválidos o ID de usuario inválido."
+          },
+          "401": {
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
+          },
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para actualizar este usuario."
           },
           "404": {
-            "description": "Usuario no encontrado"
+            "description": "Usuario no encontrado con el ID proporcionado."
           },
           "500": {
-            "description": "Error en el servidor"
+            "description": "Error interno del servidor."
           }
         }
       }
     },
-    "/usuarios/eliminarUsuario": {
+    "/eliminarUsuario/{id}": {
       "delete": {
-        "summary": "Elimina un usuario",
-        "description": "Elimina un usuario de la base de datos.",
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Elimina un usuario específico por su ID",
+        "description": "Permite eliminar un usuario específico basado en su ID único. Requiere autenticación y permisos adecuados.",
+        "operationId": "eliminarUsuario",
         "parameters": [
           {
+            "name": "id",
             "in": "path",
-            "name": "usuario_id",
             "required": true,
+            "description": "ID único del usuario a eliminar.",
             "schema": {
-              "type": "integer"
-            },
-            "description": "ID del usuario a eliminar"
+              "type": "integer",
+              "format": "int64"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Usuario eliminado correctamente",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Usuario"
-                }
-              }
-            }
+            "description": "Usuario eliminado con éxito."
           },
-          "204": {
-            "description": "Usuario eliminado correctamente"
+          "400": {
+            "description": "ID de usuario inválido."
           },
           "401": {
-            "description": "No autorizado"
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
+          },
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para eliminar este usuario."
           },
           "404": {
-            "description": "Usuario no encontrado"
+            "description": "Usuario no encontrado con el ID proporcionado."
           },
           "500": {
-            "description": "Error en el servidor"
+            "description": "Error interno del servidor."
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
-    "/usuarios/actualizarPass": {
-      "put": {
-        "summary": "Actualiza la contraseña de un usuario",
-        "description": "Permite a un usuario actualizar su contraseña.",
+    "/login": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Iniciar sesión de usuario",
+        "description": "Permite a los usuarios iniciar sesión en el sistema.",
+        "operationId": "loginUsuario",
         "requestBody": {
           "required": true,
           "content": {
@@ -851,23 +258,23 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "usuario_id",
-                  "passwordActual",
-                  "passwordNuevo"
+                  "usuario",
+                  "password"
                 ],
                 "properties": {
-                  "usuario_id": {
-                    "type": "integer",
-                    "description": "ID del usuario que actualiza su contraseña"
-                  },
-                  "passwordActual": {
+                  "usuario": {
                     "type": "string",
-                    "description": "Contraseña actual del usuario"
+                    "description": "Nombre de usuario."
                   },
-                  "passwordNuevo": {
+                  "password": {
                     "type": "string",
-                    "description": "Nueva contraseña del usuario"
+                    "format": "password",
+                    "description": "Contraseña del usuario."
                   }
+                },
+                "example": {
+                  "usuario": "nombreDeUsuario",
+                  "password": "contraseñaSegura"
                 }
               }
             }
@@ -875,219 +282,484 @@
         },
         "responses": {
           "200": {
-            "description": "Contraseña actualizada exitosamente"
+            "description": "Inicio de sesión exitoso. Devuelve un token de autenticación.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "description": "Token JWT de autenticación."
+                    }
+                  }
+                },
+                "example": {
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+              }
+            }
           },
           "400": {
-            "description": "Datos de entrada inválidos"
+            "description": "Datos de inicio de sesión inválidos."
           },
-          "404": {
-            "description": "Usuario no encontrado"
+          "401": {
+            "description": "Autenticación fallida."
           },
           "500": {
-            "description": "Error en el servidor"
+            "description": "Error interno del servidor."
           }
         }
       }
     },
-    "/fabricantes/actualizarFabricante": {
-      "put": {
-        "summary": "Actualiza un fabricante",
-        "description": "Actualiza los detalles de un fabricante existente.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
+    "/resetPassword": {
+      "post": {
+        "tags": [
+          "Usuarios"
         ],
+        "summary": "Restablecer la contraseña de usuario",
+        "description": "Permite a los usuarios solicitar el restablecimiento de su contraseña.",
+        "operationId": "resetPasswordUsuario",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Fabricante"
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Dirección de correo electrónico del usuario para restablecer la contraseña."
+                  }
+                },
+                "example": {
+                  "email": null
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Fabricante actualizado exitosamente"
+            "description": "Solicitud de restablecimiento de contraseña procesada con éxito. Un enlace o token para restablecer la contraseña ha sido enviado al correo electrónico proporcionado."
           },
           "400": {
-            "description": "Datos de entrada inválidos"
+            "description": "Dirección de correo electrónico inválida o no proporcionada."
           },
           "404": {
-            "description": "Fabricante no encontrado"
+            "description": "No se encontró un usuario con la dirección de correo electrónico proporcionada."
           },
           "500": {
-            "description": "Error en el servidor"
+            "description": "Error interno del servidor."
           }
         }
       }
     },
-    "/fabricantes/eliminarFabricante": {
-      "delete": {
-        "summary": "Elimina un fabricante",
-        "description": "Elimina un fabricante del sistema.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
+    "/crearFabricante": {
+      "post": {
+        "tags": [
+          "Fabricantes"
         ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "fabricante_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "ID del fabricante a eliminar"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Fabricante eliminado exitosamente"
-          },
-          "400": {
-            "description": "Datos de entrada inválidos"
-          },
-          "404": {
-            "description": "Fabricante no encontrado"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        }
-      }
-    },
-    "/insumos/obtenerInsumoPorID": {
-      "get": {
-        "summary": "Obtiene un insumo por ID",
-        "description": "Devuelve los detalles de un insumo específico.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Detalles del insumo"
-          },
-          "401": {
-            "description": "No autorizado"
-          },
-          "404": {
-            "description": "Insumo no encontrado"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        }
-      }
-    },
-    "/insumos/eliminarInsumo": {
-      "delete": {
-        "summary": "Elimina un insumo",
-        "description": "Elimina un insumo del sistema.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "insumo_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "ID del insumo a eliminar"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Insumo eliminado exitosamente"
-          },
-          "400": {
-            "description": "Datos de entrada inválidos"
-          },
-          "404": {
-            "description": "Insumo no encontrado"
-          },
-          "500": {
-            "description": "Error en el servidor"
-          }
-        }
-      }
-    },
-    "/usuarios/obtenerUsuarioPorID": {
-      "get": {
-        "summary": "Obtiene un usuario por ID",
-        "description": "Devuelve los detalles de un usuario específico.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Detalles del usuario",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Usuario"
+        "summary": "Crea un nuevo fabricante",
+        "description": "Permite a los usuarios autorizados crear un nuevo registro de fabricante en el sistema.",
+        "operationId": "crearFabricante",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "nombreEmpresa",
+                  "cuit"
+                ],
+                "properties": {
+                  "nombreEmpresa": {
+                    "type": "string",
+                    "description": "Nombre del fabricante."
+                  },
+                  "cuit": {
+                    "type": "string",
+                    "description": "CUIT del fabricante."
+                  }
+                },
+                "example": {
+                  "nombreEmpresa": "Empresa Ejemplo S.A.",
+                  "cuit": "30-12345678-9"
                 }
               }
             }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Fabricante creado con éxito."
+          },
+          "400": {
+            "description": "Datos de entrada inválidos."
           },
           "401": {
-            "description": "No autorizado"
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
           },
-          "404": {
-            "description": "Usuario no encontrado"
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para crear fabricantes."
           },
           "500": {
-            "description": "Error en el servidor"
+            "description": "Error interno del servidor."
           }
         }
       }
     },
-    "/usuarios/actualizarUsuarioPorID": {
+    "/actualizarFabricante": {
       "put": {
-        "summary": "Actualiza un usuario específico por ID",
-        "description": "Actualiza los datos de un usuario basado en su ID.",
-        "security": [
+        "tags": [
+          "Fabricantes"
+        ],
+        "summary": "Actualiza un fabricante existente",
+        "description": "Permite a los usuarios autorizados actualizar los detalles de un fabricante existente.",
+        "operationId": "actualizarFabricante",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "nombreEmpresa",
+                  "cuit"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "ID del fabricante a actualizar."
+                  },
+                  "nombreEmpresa": {
+                    "type": "string",
+                    "description": "Nombre actualizado del fabricante."
+                  },
+                  "cuit": {
+                    "type": "string",
+                    "description": "CUIT actualizado del fabricante."
+                  }
+                },
+                "example": {
+                  "id": 123,
+                  "nombreEmpresa": "Empresa Actualizada S.A.",
+                  "cuit": "30-98765432-1"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fabricante actualizado con éxito."
+          },
+          "400": {
+            "description": "Datos de entrada inválidos o ID de fabricante inválido."
+          },
+          "401": {
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
+          },
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para actualizar este fabricante."
+          },
+          "404": {
+            "description": "Fabricante no encontrado con el ID proporcionado."
+          },
+          "500": {
+            "description": "Error interno del servidor."
+          }
+        }
+      }
+    },
+    "/eliminarFabricante/{id}": {
+      "delete": {
+        "tags": [
+          "Fabricantes"
+        ],
+        "summary": "Elimina un fabricante específico por su ID",
+        "description": "Permite eliminar un fabricante específico basado en su ID único. Requiere autenticación y permisos adecuados.",
+        "operationId": "eliminarFabricante",
+        "parameters": [
           {
-            "bearerAuth": []
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID único del fabricante a eliminar.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Usuario actualizado con éxito",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Usuario"
+            "description": "Fabricante eliminado con éxito."
+          },
+          "400": {
+            "description": "ID de fabricante inválido."
+          },
+          "401": {
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
+          },
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para eliminar este fabricante."
+          },
+          "404": {
+            "description": "Fabricante no encontrado con el ID proporcionado."
+          },
+          "500": {
+            "description": "Error interno del servidor."
+          }
+        }
+      }
+    },
+    "/obtenerTodosLosFabricantes": {
+      "get": {
+        "tags": [
+          "Fabricantes"
+        ],
+        "summary": "Obtiene una lista de todos los fabricantes",
+        "description": "Devuelve un array de todos los fabricantes registrados en el sistema.",
+        "operationId": "obtenerTodosLosFabricantes",
+        "responses": {
+          "200": {
+            "description": "Lista de fabricantes obtenida con éxito."
+          },
+          "401": {
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
+          },
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para acceder a la información."
+          },
+          "500": {
+            "description": "Error interno del servidor."
+          }
+        }
+      }
+    },
+    "/crearInsumo": {
+      "post": {
+        "tags": [
+          "Insumos"
+        ],
+        "summary": "Crea un nuevo insumo",
+        "description": "Permite a los usuarios autorizados crear un nuevo registro de insumo en el sistema.",
+        "operationId": "crearInsumo",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "insumo",
+                  "precio",
+                  "stock"
+                ],
+                "properties": {
+                  "nombre": {
+                    "type": "string",
+                    "description": "Nombre del insumo."
+                  },
+                  "descripcion": {
+                    "type": "string",
+                    "description": "Descripción del insumo."
+                  },
+                  "precio": {
+                    "type": "number",
+                    "description": "Precio del insumo."
+                  },
+                  "stock": {
+                    "type": "integer",
+                    "description": "Stock del insumo."
+                  },
+                  "idFabricante": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "ID del fabricante del insumo."
+                  }
+                },
+                "example": {
+                  "insumo": "Insumo Ejemplo",
+                  "precio": 100,
+                  "stock": 10
                 }
               }
             }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Insumo creado con éxito."
           },
           "400": {
-            "description": "Datos inválidos"
+            "description": "Datos de entrada inválidos."
           },
           "401": {
-            "description": "No autorizado"
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
           },
-          "404": {
-            "description": "Usuario no encontrado"
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para crear insumos."
           },
           "500": {
-            "description": "Error en el servidor"
+            "description": "Error interno del servidor."
+          }
+        }
+      }
+    },
+    "/actualizarInsumo": {
+      "put": {
+        "tags": [
+          "Insumos"
+        ],
+        "summary": "Actualiza un insumo existente",
+        "description": "Permite a los usuarios autorizados actualizar los detalles de un insumo existente.",
+        "operationId": "actualizarInsumo",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "insumo",
+                  "precio",
+                  "stock"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "ID del insumo a actualizar."
+                  },
+                  "nombre": {
+                    "type": "string",
+                    "description": "Nombre actualizado del insumo."
+                  },
+                  "descripcion": {
+                    "type": "string",
+                    "description": "Descripción actualizada del insumo."
+                  },
+                  "precio": {
+                    "type": "number",
+                    "description": "Precio actualizado del insumo."
+                  },
+                  "stock": {
+                    "type": "integer",
+                    "description": "Stock actualizado del insumo."
+                  },
+                  "idFabricante": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "ID del fabricante actualizado del insumo."
+                  }
+                },
+                "example": {
+                  "id": 123,
+                  "insumo": "Insumo Actualizado",
+                  "precio": 100,
+                  "stock": 10
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Insumo actualizado con éxito."
+          },
+          "400": {
+            "description": "Datos de entrada inválidos o ID de insumo inválido."
+          },
+          "401": {
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
+          },
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para actualizar este insumo."
+          },
+          "404": {
+            "description": "Insumo no encontrado con el ID proporcionado."
+          },
+          "500": {
+            "description": "Error interno del servidor."
+          }
+        }
+      }
+    },
+    "/eliminarInsumo/{id}": {
+      "delete": {
+        "tags": [
+          "Insumos"
+        ],
+        "summary": "Elimina un insumo específico por su ID",
+        "description": "Permite eliminar un insumo específico basado en su ID único. Requiere autenticación y permisos adecuados.",
+        "operationId": "eliminarInsumo",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID único del insumo a eliminar.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Insumo eliminado con éxito."
+          },
+          "400": {
+            "description": "ID de insumo inválido."
+          },
+          "401": {
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
+          },
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para eliminar este insumo."
+          },
+          "404": {
+            "description": "Insumo no encontrado con el ID proporcionado."
+          },
+          "500": {
+            "description": "Error interno del servidor."
+          }
+        }
+      }
+    },
+    "/obtenerTodosLosInsumos": {
+      "get": {
+        "tags": [
+          "Insumos"
+        ],
+        "summary": "Obtiene una lista de todos los insumos",
+        "description": "Devuelve un array de todos los insumos registrados en el sistema.",
+        "operationId": "obtenerTodosLosInsumos",
+        "responses": {
+          "200": {
+            "description": "Lista de insumos obtenida con éxito."
+          },
+          "401": {
+            "description": "No autorizado, token de autenticación inválido o no proporcionado."
+          },
+          "403": {
+            "description": "El usuario autenticado no tiene permiso para acceder a la información."
+          },
+          "500": {
+            "description": "Error interno del servidor."
           }
         }
       }
     }
-  },
-  "tags": []
+  }
 }

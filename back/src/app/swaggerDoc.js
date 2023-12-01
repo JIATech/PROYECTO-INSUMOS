@@ -1,0 +1,577 @@
+/**
+ * @swagger
+ *  /crearUsuario:
+ *    post:
+ *      tags:
+ *        - Usuarios
+ *      summary: Crea un nuevo usuario
+ *      description: Registra un nuevo usuario en el sistema con rol 'cliente' o 'administrador'.
+ *      operationId: crearUsuario
+ *      security:
+ *        - bearerAuth: [] # Asumiendo que utiliza autenticación JWT
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - usuario
+ *                - password
+ *                - email
+ *                - rolNombre
+ *              properties:
+ *                usuario:
+ *                  type: string
+ *                  description: Nombre de usuario único para el nuevo usuario.
+ *                password:
+ *                  type: string
+ *                  format: password
+ *                  description: Contraseña para el nuevo usuario.
+ *                email:
+ *                  type: string
+ *                  format: email
+ *                  description: Dirección de correo electrónico del nuevo usuario.
+ *                rolNombre:
+ *                  type: string
+ *                  description: Rol asignado al nuevo usuario, puede ser 'cliente' o 'administrador'.
+ *                # Incluir aquí otros campos necesarios para crear un usuario 'cliente'
+ *      responses:
+ *        '201':
+ *          description: Usuario creado exitosamente.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Usuario' # Debe definir este esquema en la sección 'components'
+ *        '400':
+ *          description: Datos de entrada inválidos o usuario ya existe.
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para crear usuarios.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /obtenerTodosLosUsuarios:
+ *    get:
+ *      tags:
+ *        - Usuarios
+ *      summary: Obtiene una lista de todos los usuarios
+ *      description: Devuelve un array de todos los usuarios registrados en el sistema.
+ *      operationId: obtenerTodosLosUsuarios
+ *      security:
+ *        - bearerAuth: [] # Asumiendo que utiliza autenticación JWT
+ *      responses:
+ *        '200':
+ *          description: Lista de usuarios obtenida con éxito.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Usuario' # Debe definir este esquema en la sección 'components'
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para acceder a la información.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /obtenerUsuarioPorID/{id}:
+ *    get:
+ *      tags:
+ *        - Usuarios
+ *      summary: Obtiene un usuario específico por su ID
+ *      description: Devuelve los detalles de un usuario específico basado en su ID único.
+ *      operationId: obtenerUsuarioPorID
+ *      parameters:
+ *        - name: id
+ *          in: path
+ *          required: true
+ *          description: ID único del usuario a obtener.
+ *          schema:
+ *            type: integer
+ *            format: int64
+ *      responses:
+ *        '200':
+ *          description: Detalles del usuario obtenidos con éxito.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Usuario' # Debe definir este esquema en la sección 'components'
+ *        '400':
+ *          description: ID de usuario inválido o no proporcionado.
+ *        '404':
+ *          description: Usuario no encontrado con el ID proporcionado.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /actualizarUsuarioPorID/{id}:
+ *    put:
+ *      tags:
+ *        - Usuarios
+ *      summary: Actualiza un usuario específico por su ID
+ *      description: Permite actualizar los detalles de un usuario específico basado en su ID único. Requiere autenticación y permisos adecuados.
+ *      operationId: actualizarUsuarioPorID
+ *      security:
+ *        - bearerAuth: [] # Asumiendo que utiliza autenticación JWT
+ *      parameters:
+ *        - name: id
+ *          in: path
+ *          required: true
+ *          description: ID único del usuario a actualizar.
+ *          schema:
+ *            type: integer
+ *            format: int64
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                usuario:
+ *                  type: string
+ *                  description: Nombre de usuario actualizado (opcional).
+ *                email:
+ *                  type: string
+ *                  format: email
+ *                  description: Dirección de correo electrónico actualizada (opcional).
+ *                # Incluir aquí otros campos que se pueden actualizar
+ *              example:
+ *                usuario: nuevoNombreDeUsuario
+ *                email:
+ *      responses:
+ *        '200':
+ *          description: Usuario actualizado con éxito.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Usuario'
+ *        '400':
+ *          description: Datos de entrada inválidos o ID de usuario inválido.
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para actualizar este usuario.
+ *        '404':
+ *          description: Usuario no encontrado con el ID proporcionado.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /eliminarUsuario/{id}:
+ *    delete:
+ *      tags:
+ *        - Usuarios
+ *      summary: Elimina un usuario específico por su ID
+ *      description: Permite eliminar un usuario específico basado en su ID único. Requiere autenticación y permisos adecuados.
+ *      operationId: eliminarUsuario
+ *      security:
+ *        - bearerAuth: [] # Asumiendo que utiliza autenticación JWT
+ *      parameters:
+ *        - name: id
+ *          in: path
+ *          required: true
+ *          description: ID único del usuario a eliminar.
+ *          schema:
+ *            type: integer
+ *            format: int64
+ *      responses:
+ *        '200':
+ *          description: Usuario eliminado con éxito.
+ *        '400':
+ *          description: ID de usuario inválido.
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para eliminar este usuario.
+ *        '404':
+ *          description: Usuario no encontrado con el ID proporcionado.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /login:
+ *    post:
+ *      tags:
+ *        - Usuarios
+ *      summary: Iniciar sesión de usuario
+ *      description: Permite a los usuarios iniciar sesión en el sistema.
+ *      operationId: loginUsuario
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - usuario
+ *                - password
+ *              properties:
+ *                usuario:
+ *                  type: string
+ *                  description: Nombre de usuario.
+ *                password:
+ *                  type: string
+ *                  format: password
+ *                  description: Contraseña del usuario.
+ *              example:
+ *                usuario: nombreDeUsuario
+ *                password: contraseñaSegura
+ *      responses:
+ *        '200':
+ *          description: Inicio de sesión exitoso. Devuelve un token de autenticación.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  token:
+ *                    type: string
+ *                    description: Token JWT de autenticación.
+ *              example:
+ *                 token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *        '400':
+ *          description: Datos de inicio de sesión inválidos.
+ *        '401':
+ *          description: Autenticación fallida.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /resetPassword:
+ *    post:
+ *      tags:
+ *        - Usuarios
+ *      summary: Restablecer la contraseña de usuario
+ *      description: Permite a los usuarios solicitar el restablecimiento de su contraseña.
+ *      operationId: resetPasswordUsuario
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - email
+ *              properties:
+ *                email:
+ *                  type: string
+ *                  format: email
+ *                  description: Dirección de correo electrónico del usuario para restablecer la contraseña.
+ *              example:
+ *                email:
+ *      responses:
+ *        '200':
+ *          description: Solicitud de restablecimiento de contraseña procesada con éxito. Un enlace o token para restablecer la contraseña ha sido enviado al correo electrónico proporcionado.
+ *        '400':
+ *          description: Dirección de correo electrónico inválida o no proporcionada.
+ *        '404':
+ *          description: No se encontró un usuario con la dirección de correo electrónico proporcionada.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /crearFabricante:
+ *    post:
+ *      tags:
+ *        - Fabricantes
+ *      summary: Crea un nuevo fabricante
+ *      description: Permite a los usuarios autorizados crear un nuevo registro de fabricante en el sistema.
+ *      operationId: crearFabricante
+ *      security:
+ *        - bearerAuth: [] # Asumiendo que utiliza autenticación JWT
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - nombreEmpresa
+ *                - cuit
+ *              properties:
+ *                nombreEmpresa:
+ *                  type: string
+ *                  description: Nombre del fabricante.
+ *                cuit:
+ *                  type: string
+ *                  description: CUIT del fabricante.
+ *              example:
+ *                nombreEmpresa: "Empresa Ejemplo S.A."
+ *                cuit: "30-12345678-9"
+ *      responses:
+ *        '201':
+ *          description: Fabricante creado con éxito.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Fabricante' # Debe definir este esquema en la sección 'components'
+ *        '400':
+ *          description: Datos de entrada inválidos.
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para crear fabricantes.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /actualizarFabricante:
+ *    put:
+ *      tags:
+ *        - Fabricantes
+ *      summary: Actualiza un fabricante existente
+ *      description: Permite a los usuarios autorizados actualizar los detalles de un fabricante existente.
+ *      operationId: actualizarFabricante
+ *      security:
+ *        - bearerAuth: []
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - id
+ *                - nombreEmpresa
+ *                - cuit
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                  format: int64
+ *                  description: ID del fabricante a actualizar.
+ *                nombreEmpresa:
+ *                  type: string
+ *                  description: Nombre actualizado del fabricante.
+ *                cuit:
+ *                  type: string
+ *                  description: CUIT actualizado del fabricante.
+ *              example:
+ *                id: 123
+ *                nombreEmpresa: "Empresa Actualizada S.A."
+ *                cuit: "30-98765432-1"
+ *      responses:
+ *        '200':
+ *          description: Fabricante actualizado con éxito.
+ *        '400':
+ *          description: Datos de entrada inválidos o ID de fabricante inválido.
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para actualizar este fabricante.
+ *        '404':
+ *          description: Fabricante no encontrado con el ID proporcionado.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /eliminarFabricante/{id}:
+ *    delete:
+ *      tags:
+ *        - Fabricantes
+ *      summary: Elimina un fabricante específico por su ID
+ *      description: Permite eliminar un fabricante específico basado en su ID único. Requiere autenticación y permisos adecuados.
+ *      operationId: eliminarFabricante
+ *      security:
+ *        - bearerAuth: [] # Asumiendo que utiliza autenticación JWT
+ *      parameters:
+ *        - name: id
+ *          in: path
+ *          required: true
+ *          description: ID único del fabricante a eliminar.
+ *          schema:
+ *            type: integer
+ *            format: int64
+ *      responses:
+ *        '200':
+ *          description: Fabricante eliminado con éxito.
+ *        '400':
+ *          description: ID de fabricante inválido.
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para eliminar este fabricante.
+ *        '404':
+ *          description: Fabricante no encontrado con el ID proporcionado.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /obtenerTodosLosFabricantes:
+ *    get:
+ *      tags:
+ *        - Fabricantes
+ *      summary: Obtiene una lista de todos los fabricantes
+ *      description: Devuelve un array de todos los fabricantes registrados en el sistema.
+ *      operationId: obtenerTodosLosFabricantes
+ *      security:
+ *        - bearerAuth: [] # Asumiendo que utiliza autenticación JWT
+ *      responses:
+ *        '200':
+ *          description: Lista de fabricantes obtenida con éxito.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Fabricante' # Debe definir este esquema en la sección 'components'
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para acceder a la información.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /crearInsumo:
+ *    post:
+ *      tags:
+ *        - Insumos
+ *      summary: Crea un nuevo insumo
+ *      description: Permite a los usuarios autorizados crear un nuevo registro de insumo en el sistema.
+ *      operationId: crearInsumo
+ *      security:
+ *        - bearerAuth: [] # Asumiendo que utiliza autenticación JWT
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - insumo
+ *                - precio
+ *                - stock
+ *              properties:
+ *                nombre:
+ *                  type: string
+ *                  description: Nombre del insumo.
+ *                descripcion:
+ *                  type: string
+ *                  description: Descripción del insumo.
+ *                precio:
+ *                  type: number
+ *                  description: Precio del insumo.
+ *                stock:
+ *                  type: integer
+ *                  description: Stock del insumo.
+ *                idFabricante:
+ *                  type: integer
+ *                  format: int64
+ *                  description: ID del fabricante del insumo.
+ *              example:
+ *                insumo: "Insumo Ejemplo"
+ *                precio: 100
+ *                stock: 10
+ *      responses:
+ *        '201':
+ *          description: Insumo creado con éxito.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Insumo' # Debe definir este esquema en la sección 'components'
+ *        '400':
+ *          description: Datos de entrada inválidos.
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para crear insumos.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /actualizarInsumo:
+ *    put:
+ *      tags:
+ *        - Insumos
+ *      summary: Actualiza un insumo existente
+ *      description: Permite a los usuarios autorizados actualizar los detalles de un insumo existente.
+ *      operationId: actualizarInsumo
+ *      security:
+ *        - bearerAuth: []
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - id
+ *                - insumo
+ *                - precio
+ *                - stock
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                  format: int64
+ *                  description: ID del insumo a actualizar.
+ *                nombre:
+ *                  type: string
+ *                  description: Nombre actualizado del insumo.
+ *                descripcion:
+ *                  type: string
+ *                  description: Descripción actualizada del insumo.
+ *                precio:
+ *                  type: number
+ *                  description: Precio actualizado del insumo.
+ *                stock:
+ *                  type: integer
+ *                  description: Stock actualizado del insumo.
+ *                idFabricante:
+ *                  type: integer
+ *                  format: int64
+ *                  description: ID del fabricante actualizado del insumo.
+ *              example:
+ *                id: 123
+ *                insumo: "Insumo Actualizado"
+ *                precio: 100
+ *                stock: 10
+ *      responses:
+ *        '200':
+ *          description: Insumo actualizado con éxito.
+ *        '400':
+ *          description: Datos de entrada inválidos o ID de insumo inválido.
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para actualizar este insumo.
+ *        '404':
+ *          description: Insumo no encontrado con el ID proporcionado.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /eliminarInsumo/{id}:
+ *    delete:
+ *      tags:
+ *        - Insumos
+ *      summary: Elimina un insumo específico por su ID
+ *      description: Permite eliminar un insumo específico basado en su ID único. Requiere autenticación y permisos adecuados.
+ *      operationId: eliminarInsumo
+ *      security:
+ *        - bearerAuth: [] # Asumiendo que utiliza autenticación JWT
+ *      parameters:
+ *        - name: id
+ *          in: path
+ *          required: true
+ *          description: ID único del insumo a eliminar.
+ *          schema:
+ *            type: integer
+ *            format: int64
+ *      responses:
+ *        '200':
+ *          description: Insumo eliminado con éxito.
+ *        '400':
+ *          description: ID de insumo inválido.
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para eliminar este insumo.
+ *        '404':
+ *          description: Insumo no encontrado con el ID proporcionado.
+ *        '500':
+ *          description: Error interno del servidor.
+ *  /obtenerTodosLosInsumos:
+ *    get:
+ *      tags:
+ *        - Insumos
+ *      summary: Obtiene una lista de todos los insumos
+ *      description: Devuelve un array de todos los insumos registrados en el sistema.
+ *      operationId: obtenerTodosLosInsumos
+ *      security:
+ *        - bearerAuth: [] # Asumiendo que utiliza autenticación JWT
+ *      responses:
+ *        '200':
+ *          description: Lista de insumos obtenida con éxito.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Insumo' # Debe definir este esquema en la sección 'components'
+ *        '401':
+ *          description: No autorizado, token de autenticación inválido o no proporcionado.
+ *        '403':
+ *          description: El usuario autenticado no tiene permiso para acceder a la información.
+ *        '500':
+ *          description: Error interno del servidor.
+ */

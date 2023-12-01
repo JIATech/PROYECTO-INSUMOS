@@ -2,3 +2,6 @@ back/node_modules/
 back/.env
 .env
 back/tokenprueba.js
+front/INSUMOS-Vue.js-front/
+front/.README
+.vs/

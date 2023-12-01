@@ -13,7 +13,7 @@ const validateResult = (req, res, next) => {
 
 // Validaciones de los inputs para cargar un fabricante:
 const validacionesFabricantes = [
-    check('nombre')
+    check('nombreEmpresa')
     .exists()
     .not()
     .isEmpty()
@@ -21,11 +21,6 @@ const validacionesFabricantes = [
     .isLength({min: 3})
     .withMessage('El nombre debe tener al menos 3 caracteres'),
     check('cuit')
-    .exists()
-    .not()
-    .isEmpty()
-    .isAlphanumeric(),
-    check('empresa')
     .exists()
     .not()
     .isEmpty()

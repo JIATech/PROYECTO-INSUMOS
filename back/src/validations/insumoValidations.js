@@ -12,33 +12,23 @@ const validateResult = (req, res, next) => {
 
 // Validaciones input:
 const validacionesInsumos = [
-    check('insumo_name')
+    check('insumo')
     .exists()
     .not()
     .isEmpty()
     .isAlphanumeric()
     .isLength({min: 3})
     .withMessage('El nombre debe tener al menos 3 caracteres'),
-    check('price')
+    check('precio')
     .exists()
     .not()
     .isEmpty()
     .isNumeric(),
-    check('is_stock')
+    check('stock')
     .exists()
     .not()
     .isEmpty()
     .isNumeric(),
-    check('cantidad')
-    .exists()
-    .not()
-    .isEmpty()
-    .isNumeric(),
-    check('tipo')
-    .exists()
-    .not()
-    .isEmpty()
-    .isAlphanumeric(),
 
     (req, res, next) => {
        validateResult(req, res, next)
