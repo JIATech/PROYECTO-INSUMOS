@@ -16,18 +16,6 @@ const validateResult = (req, res, next) => {
 
 // Validaciones inputs para cargarUsuario:
 const validacionesInputs = [
-    // Verifica que el email exista, no esté vacío y sea un email válido.
-    check('email')
-    .exists()
-    .not()
-    .isEmpty()
-    .isEmail(),
-    // Verifica que el usuario exista, no esté vacío y sea alfanumérico.
-    check('usuario')
-    .exists()
-    .not()
-    .isEmpty()
-    .isAlphanumeric(),
     // Verifica que el password exista, no esté vacío y sea alfanumérico.
     check('password')
     .exists()

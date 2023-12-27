@@ -26,7 +26,7 @@ const authenticate = async (req, res, next) => {
     
     // Adjuntar usuario y permisos al objeto de solicitud
     req.usuario = usuario;
-    req.permisos = usuario.rol.roles_permisos.map(rp => rp.permiso.permiso);
+    req.permisos = usuario.role.roles_permisos.map(rp => rp.permiso.permiso);
     
     next();
   } catch (error) {

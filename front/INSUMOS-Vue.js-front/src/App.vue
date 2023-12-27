@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import Login from './views/LoginView.vue'
+import Dashboard from './views/DashboardView.vue'
 
 </script>
 
@@ -12,8 +14,8 @@ import HelloWorld from './components/HelloWorld.vue'
       <HelloWorld msg="Insumos Inc. S.A." />
       <nav>
         <RouterLink to="/">Inicio</RouterLink>
-        <RouterLink to="/login">Login</RouterLink>
-        <RouterLink to="/register">Registrar</RouterLink>
+        <RouterLink to="/login">Iniciar Sesión</RouterLink>
+        <RouterLink to="/register">Registrarse</RouterLink>
         <RouterLink to="/about">Sobre nosotros</RouterLink>
       </nav>
       <h5>
@@ -23,6 +25,10 @@ import HelloWorld from './components/HelloWorld.vue'
       </h5>
     </div>
   </header>
+  <div id="app">
+    <Login />
+    <Dashboard />
+  </div>
 
   <RouterView />
 </template>

@@ -15,6 +15,7 @@
 import { defineComponent, ref, reactive, computed } from 'vue';
 import axios from '@/services/axios.service.js';
 import { AxiosError } from 'axios';
+import router from '@/router';
 
 interface ErrorResponse {
   message: string;
@@ -51,9 +52,10 @@ export default defineComponent({
         if (data.token) {
           localStorage.setItem('user-token', data.token);
           message.value = { content: 'Inicio de sesión exitoso', type: 'success' };
-          // Aquí puede incluir cualquier lógica adicional necesaria después del inicio de sesión
           // Configurar Axios con el token
           axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+          // Redirigir al usuario a UserDashboard
+          router.push('/dashboard');
         } else {
           // Manejar el caso en que la respuesta no incluya un token
           message.value = { content: 'Inicio de sesión fallido', type: 'error' };
@@ -73,7 +75,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.register-container {
+.login-container {
   max-width: 400px;
   margin: 50px auto;
   padding: 20px;
@@ -82,7 +84,7 @@ export default defineComponent({
   background-color: rgba(60, 60, 60, 0.29);;
 }
 
-.register-form {
+.login-form {
   display: flex;
   flex-direction: column;
   gap: 10px;

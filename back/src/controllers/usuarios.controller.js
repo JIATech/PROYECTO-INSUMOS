@@ -139,25 +139,70 @@ usuariosController.deleteUsuario = async (req, res) => {
 // Inicio de sesión
 usuariosController.login = async (req, res) => {
   try {
-    const { login, password } = req.body;
-    const usuario = await usuarios.findOne({ 
+    const { usuario, password } = req.body;
+    const user = await usuarios.findOne({ 
       where: { 
         [Op.or]: [
-          { usuario: login },
-          { email: login }
+          { usuario: usuario },
+          { email: usuario }
         ]
       }
     });
-    if (usuario && await bcrypt.compare(password, usuario.password)) {
-      const token = jwt.sign({ id: usuario.id }, keys.key, { expiresIn: "1h" });
-      res.json({ message: "Inicio de sesión exitoso", token });
+    if (user && await bcrypt.compare(password, user.password)) {
+      const token = jwt.sign({ id: user.id }, keys.key, { expiresIn: "1h" });
+      res.json({ success: true, token });
     } else {
-      res.status(401).json({ message: "Credenciales incorrectas" });
+      res.status(401).json({ success: false, message: "Credenciales incorrectas" });
     }
   } catch (error) {
     res.status(500).json({ message: "Error al iniciar sesión", error });
   }
 };
+
+// Decodificar token JWT y devolver json con el rol y permisos del usuario
+usuariosController.getRolYPermisos = async (req, res) => {
+  try {
+    const token = req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : null;
+
+    if (!token) {
+      return res.status(403).json({ message: "No se proporcionó un token" });
+    }
+
+    const decoded = jwt.verify(token, keys.key);
+    console.log(decoded);
+    const usuario = await usuarios.findByPk(decoded.id, {
+      attributes: [], // Sin atributos del usuario
+      include: [
+        {
+          model: roles,
+          attributes: ['rol'], // Solo incluir el nombre del rol
+          include: [
+            {
+              model: rolesPermisos,
+              include: [
+                {
+                  model: permisos,
+                  attributes: ['permiso'] // Solo incluir el nombre del permiso
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    });
+    
+    // Construyendo la respuesta
+    const response = {
+      rol: usuario.role.rol,
+      permisos: usuario.role.roles_permisos.map(rp => rp.permiso.permiso)
+    };
+    
+    res.json(response); 
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el rol y permisos del usuario", error });
+  }
+};
+
 
 // Restablecimiento de contraseña
 usuariosController.resetPassword = async (req, res) => {
@@ -206,6 +251,7 @@ usuariosController.verifyToken = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, keys.key);
     req.usuarioId = decoded.id;
+    res.json({ message: "Token válido" });
     next();
   } catch (error) {
     return res.status(401).json({ message: "Token inválido" });

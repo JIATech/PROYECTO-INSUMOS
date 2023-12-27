@@ -11,8 +11,9 @@ userRouter.get('/obtenerUsuarioPorID/:id', usuariosController.getUsuarioById);
 userRouter.post('/crearUsuario', authenticate, authorize('CrearUsuario'), validacionesInputs, usuariosController.createUsuario);
 userRouter.put('/actualizarUsuarioPorID/:id', authenticate, authorize('ModificarUsuario'), usuariosController.updateUsuario);
 userRouter.delete('/eliminarUsuario/:id', authenticate, authorize('EliminarUsuario'), usuariosController.deleteUsuario);
-userRouter.post("/login", validacionLogin, usuariosController.login);
+userRouter.post("/login", usuariosController.login);
 userRouter.post('/resetPassword', usuariosController.resetPassword);
+userRouter.get('/getRolYPermisos', usuariosController.getRolYPermisos);
 
 
 module.exports = userRouter;
