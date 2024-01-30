@@ -9,6 +9,8 @@ insumoRouter.get("/obtenerTodosLosInsumos", authenticate, insumosController.getA
 
 insumoRouter.get("/obtenerInsumoPorID", authenticate, insumosController.getInsumoById);
 
+insumoRouter.get("/buscarInsumo", authenticate, insumosController.searchInsumo);
+
 insumoRouter.post("/crearInsumo", authenticate, authorize('CrearInsumo'), validacionesInsumos, insumosController.createInsumo);
 
 insumoRouter.put("/actualizarInsumo", authenticate, authorize('ModificarInsumo'), insumosController.updateInsumo);

@@ -149,15 +149,29 @@ usuariosController.login = async (req, res) => {
       }
     });
     if (user && await bcrypt.compare(password, user.password)) {
-      const token = jwt.sign({ id: user.id }, keys.key, { expiresIn: "1h" });
-      res.json({ success: true, token });
+      
+      // buscar usuario por ID y devolver el rol
+      const usuario = await usuarios.findByPk(user.id, {
+        attributes: [], // Sin atributos del usuario
+        include: [
+          {
+            model: roles,
+            attributes: ['rol'], // Solo incluir el nombre del rol
+            include: []
+          }
+        ]
+      });
+
+      const token = jwt.sign({ id: user.id, role: usuario.role.rol }, keys.key, { expiresIn: "1h" });
+      res.json({ message: usuario.role.rol, token });
     } else {
-      res.status(401).json({ success: false, message: "Credenciales incorrectas" });
+      res.status(401).json({ message: "Credenciales incorrectas" });
     }
   } catch (error) {
     res.status(500).json({ message: "Error al iniciar sesión", error });
   }
 };
+
 
 // Decodificar token JWT y devolver json con el rol y permisos del usuario
 usuariosController.getRolYPermisos = async (req, res) => {

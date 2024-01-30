@@ -16,7 +16,10 @@ insumos.init(
     },
     stock: {
       type: DataTypes.INTEGER,
-    }
+    },
+    tags: {
+      type: DataTypes.STRING,
+    },
   },
   {
     sequelize,

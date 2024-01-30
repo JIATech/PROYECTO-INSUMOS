@@ -1,4 +1,5 @@
 const insumos = require("../models/insumos.model");
+const { Op } = require("sequelize");
 
 const insumosController = {};
 
@@ -35,6 +36,34 @@ insumosController.getInsumoById = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: "Error al obtener el insumo", error });
+  }
+};
+
+// Búsqueda dinámica de insumos
+insumosController.searchInsumo = async (req, res) => {
+  try {
+    const { insumo, tags, precioMin, precioMax, enStock } = req.params;
+    const condiciones = {};
+    if (insumo) {
+      condiciones.insumo = { [Op.like]: `%${insumo}%` };
+    }
+    if (tags) {
+      const tagsArray = tags.split(",");
+      if (tagsArray.length > 0) {
+        condiciones.tags = { [Op.in]: tagsArray };
+      }
+    }
+    if (precioMin !== undefined && precioMax !== undefined) {
+      condiciones.precio = { [Op.between]: [precioMin, precioMax] };
+    }
+    if (enStock !== undefined) {
+      condiciones.stock = enStock ? { [Op.gt]: 0 } : 0;
+    }
+
+    return await insumos.findAll({ where: condiciones });
+  }
+  catch (error) {
+    res.status(500).json({ message: "Error al buscar insumos", error });
   }
 };
 

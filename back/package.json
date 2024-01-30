@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
+    "debug": "nodemon --inspect src/index.js",
     "dev": "npx nodemon src/index.js"
   },
   "keywords": [],
@@ -25,7 +26,6 @@
     "morgan": "^1.10.0",
     "mysql2": "^3.6.2",
     "nodemailer": "^6.9.7",
-    "nodemon": "^3.0.1",
     "path": "^0.12.7",
     "save": "^2.9.0",
     "sequelize": "^6.33.0",
